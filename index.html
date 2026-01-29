@@ -946,42 +946,68 @@
             if (grid) grid.style.transform = `translateY(${currentScroll * 0.1}px)`;
         });
         
-        // Wait for DOM to be ready
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hamburger menu toggle
+        // Hamburger menu toggle - Run immediately since script is at bottom of page
+        (function() {
             const hamburger = document.getElementById('hamburger');
             const navLinks = document.getElementById('nav-links');
             
+            console.log('Hamburger element:', hamburger);
+            console.log('Nav links element:', navLinks);
+            
             if (hamburger && navLinks) {
-                hamburger.addEventListener('click', () => {
+                hamburger.addEventListener('click', function() {
+                    console.log('Hamburger clicked!');
                     hamburger.classList.toggle('active');
                     navLinks.classList.toggle('active');
+                    console.log('Nav links classes:', navLinks.className);
                 });
                 
                 // Close menu when clicking a link
-                document.querySelectorAll('.nav-links a').forEach(link => {
-                    link.addEventListener('click', () => {
+                document.querySelectorAll('.nav-links a').forEach(function(link) {
+                    link.addEventListener('click', function() {
                         hamburger.classList.remove('active');
                         navLinks.classList.remove('active');
                     });
                 });
+                
+                console.log('Hamburger menu initialized successfully');
+            } else {
+                console.error('Hamburger or nav-links element not found!');
             }
-        });
+        })();
         
         // Load recent blog posts from GitHub
         async function loadRecentPosts() {
+            console.log('=== Starting loadRecentPosts ===');
+            const container = document.getElementById('recent-blog-posts');
+            console.log('Container element:', container);
+            
             try {
-                const response = await fetch('https://api.github.com/repos/codyuhing/personal-website/contents/blog');
+                console.log('Fetching from GitHub API...');
+                const apiUrl = 'https://api.github.com/repos/codyuhing/personal-website/contents/blog';
+                console.log('API URL:', apiUrl);
+                
+                const response = await fetch(apiUrl);
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
                 
                 if (!response.ok) {
-                    throw new Error('No posts found');
+                    const errorText = await response.text();
+                    console.error('API Error Response:', errorText);
+                    throw new Error(`API returned ${response.status}: ${errorText}`);
                 }
                 
                 const files = await response.json();
+                console.log('Files received:', files);
+                console.log('Number of files:', files.length);
+                
                 const markdownFiles = files.filter(file => file.name.endsWith('.md'));
+                console.log('Markdown files:', markdownFiles);
+                console.log('Number of markdown files:', markdownFiles.length);
                 
                 if (markdownFiles.length === 0) {
-                    document.getElementById('recent-blog-posts').innerHTML = `
+                    console.log('No markdown files found');
+                    container.innerHTML = `
                         <div style="text-align: center; padding: 2rem; color: var(--neon-dim);">
                             No blog posts yet. Create your first post in the <a href="/admin" style="color: var(--neon-accent);">admin panel</a>!
                         </div>
@@ -990,25 +1016,40 @@
                 }
                 
                 // Fetch content of each markdown file
+                console.log('Fetching content for', markdownFiles.length, 'files...');
                 const posts = await Promise.all(
                     markdownFiles.slice(0, 3).map(async file => {
+                        console.log('Fetching file:', file.name);
                         const contentResponse = await fetch(file.download_url);
                         const content = await contentResponse.text();
+                        console.log('Content received for:', file.name, '- length:', content.length);
                         return parsePost(content, file.name);
                     })
                 );
                 
+                console.log('Posts parsed:', posts);
+                
                 // Sort by date (newest first)
                 posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                console.log('Posts sorted');
                 
                 // Display posts
                 displayPosts(posts.slice(0, 3));
+                console.log('=== loadRecentPosts completed successfully ===');
                 
             } catch (error) {
-                console.error('Error loading posts:', error);
-                document.getElementById('recent-blog-posts').innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--neon-dim);">
-                        No blog posts yet. Create your first post in the <a href="/admin" style="color: var(--neon-accent);">admin panel</a>!
+                console.error('=== ERROR in loadRecentPosts ===');
+                console.error('Error type:', error.name);
+                console.error('Error message:', error.message);
+                console.error('Full error:', error);
+                console.error('Stack trace:', error.stack);
+                
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #ff4444;">
+                        <strong>Error loading posts</strong><br>
+                        <small>${error.message}</small><br>
+                        <small style="display: block; margin-top: 1rem;">Check browser console (F12) for details</small><br>
+                        <a href="/admin" style="color: var(--neon-accent); margin-top: 1rem; display: inline-block;">Create your first post</a>
                     </div>
                 `;
             }
