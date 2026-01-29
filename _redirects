@@ -1,0 +1,2 @@
+# Redirect blog post URLs to post template
+/blog/*  /post.html  200
