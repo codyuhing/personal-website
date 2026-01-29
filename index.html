@@ -712,16 +712,18 @@
     <nav>
         <div class="container">
             <a href="/" class="logo">CODY UHING</a>
-            <button class="hamburger" id="hamburger" aria-label="Menu">
+            <button class="hamburger" id="hamburger" 
+                    onclick="this.classList.toggle('active'); document.getElementById('nav-links').classList.toggle('active');" 
+                    aria-label="Menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
             <ul class="nav-links" id="nav-links">
-                <li><a href="/#portfolio">Portfolio</a></li>
-                <li><a href="/blog.html">Blog</a></li>
-                <li><a href="/#resume">Resume</a></li>
-                <li><a href="/#contact">Contact</a></li>
+                <li><a href="/#portfolio" onclick="document.getElementById('nav-links').classList.remove('active'); document.getElementById('hamburger').classList.remove('active');">Portfolio</a></li>
+                <li><a href="/blog.html" onclick="document.getElementById('nav-links').classList.remove('active'); document.getElementById('hamburger').classList.remove('active');">Blog</a></li>
+                <li><a href="/#resume" onclick="document.getElementById('nav-links').classList.remove('active'); document.getElementById('hamburger').classList.remove('active');">Resume</a></li>
+                <li><a href="/#contact" onclick="document.getElementById('nav-links').classList.remove('active'); document.getElementById('hamburger').classList.remove('active');">Contact</a></li>
             </ul>
         </div>
     </nav>
@@ -903,6 +905,11 @@
     <div class="scroll-indicator" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"></div>
     
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        console.log('========================================');
+        console.log('MAIN SCRIPT IS STARTING TO RUN');
+        console.log('If you see this, JavaScript is working');
+        console.log('========================================');
+        
         // Smooth scroll for nav links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -946,37 +953,9 @@
             if (grid) grid.style.transform = `translateY(${currentScroll * 0.1}px)`;
         });
         
-        // Hamburger menu toggle - Run immediately since script is at bottom of page
-        (function() {
-            const hamburger = document.getElementById('hamburger');
-            const navLinks = document.getElementById('nav-links');
-            
-            console.log('Hamburger element:', hamburger);
-            console.log('Nav links element:', navLinks);
-            
-            if (hamburger && navLinks) {
-                hamburger.addEventListener('click', function() {
-                    console.log('Hamburger clicked!');
-                    hamburger.classList.toggle('active');
-                    navLinks.classList.toggle('active');
-                    console.log('Nav links classes:', navLinks.className);
-                });
-                
-                // Close menu when clicking a link
-                document.querySelectorAll('.nav-links a').forEach(function(link) {
-                    link.addEventListener('click', function() {
-                        hamburger.classList.remove('active');
-                        navLinks.classList.remove('active');
-                    });
-                });
-                
-                console.log('Hamburger menu initialized successfully');
-            } else {
-                console.error('Hamburger or nav-links element not found!');
-            }
-        })();
-        
         // Load recent blog posts from GitHub
+        console.log('=== ABOUT TO LOAD BLOG POSTS ===');
+        
         async function loadRecentPosts() {
             console.log('=== Starting loadRecentPosts ===');
             const container = document.getElementById('recent-blog-posts');
@@ -1126,6 +1105,9 @@
         }
         
         // Load posts when page loads
+        console.log('========================================');
+        console.log('ABOUT TO CALL loadRecentPosts()');
+        console.log('========================================');
         loadRecentPosts();
         
         // Netlify Identity Widget
