@@ -946,21 +946,26 @@
             if (grid) grid.style.transform = `translateY(${currentScroll * 0.1}px)`;
         });
         
-        // Hamburger menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('nav-links');
-        
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
-        
-        // Close menu when clicking a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hamburger menu toggle
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('nav-links');
+            
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                });
+                
+                // Close menu when clicking a link
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                    });
+                });
+            }
         });
         
         // Load recent blog posts from GitHub
@@ -1065,7 +1070,7 @@
                 });
                 
                 return `
-                    <a href="/blog/${post.slug}.html" class="blog-post">
+                    <a href="/blog/${post.slug}" class="blog-post">
                         <div class="blog-meta">
                             <span class="blog-date">${formattedDate}</span>
                             <span class="blog-category">${post.category}</span>
