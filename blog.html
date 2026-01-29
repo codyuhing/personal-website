@@ -366,7 +366,7 @@
                 });
                 
                 return `
-                    <div class="blog-post">
+                    <a href="/blog/${post.slug}" class="blog-post">
                         <div class="post-meta">
                             <span class="post-date">${formattedDate}</span>
                             <span class="post-category">${post.category}</span>
@@ -375,7 +375,7 @@
                             <h3 class="post-title">${post.title}</h3>
                             <p class="post-excerpt">${post.excerpt}</p>
                         </div>
-                    </div>
+                    </a>
                 `;
             }).join('');
         }
