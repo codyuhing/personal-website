@@ -927,7 +927,7 @@ return {
     { threshold: 5, label: "OT V" },
     { threshold: 6, label: "OT VI" },
     { threshold: 7, label: "OT VII" },
-    { threshold: 8, label: "OT VIII (Truth Revealed)" }
+    { threshold: 9, label: "OT VIII (Truth Revealed)" }
   ];
   // 3. Determine the current label based on progress
   let currentLevel = levels[0].label;
@@ -940,10 +940,10 @@ return {
   // 4. Update the text
   levelElement.innerText = currentLevel;
   // 5. Special Effect: If they hit OT VIII, change the site vibe
-  if (progress >= 25) {
+  if (progress >= 9) {
     document.body.style.transition = "background-color 2s ease";
-    // A specific "Cosmic" Navy Blue
-    document.body.style.backgroundColor = "#000814"; 
+    // Actual Navy Blue
+    document.body.style.backgroundColor = "#001f3f"; 
     levelElement.style.color = "#00f2ff"; // Neon glow for the enlightened
     levelElement.style.textShadow = "0 0 5px #00f2ff";
   }
