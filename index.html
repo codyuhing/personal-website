@@ -856,11 +856,11 @@ if (!excerpt || excerpt.length === 0) {
         .replace(/\n+/g, ' ') // Replace newlines with spaces
         .trim();
     
-    // Use first 300 characters from body
-    excerpt = plainText.substring(0, 300);
+    // Use first 150 words from body
+    excerpt = plainText.substring(0, 150);
     
     // Add ellipsis if truncated
-    if (plainText.length > 300) {
+    if (plainText.length > 150) {
         excerpt = excerpt.trim() + '...';
     }
 }
