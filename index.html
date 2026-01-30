@@ -829,15 +829,36 @@
                         const match = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
                         if (!match) return null;
                         
-                        const frontmatter = {};
-match[1].split('\n').forEach(line => {
+                        // Better YAML parsing that handles multi-line values
+const frontmatter = {};
+const lines = match[1].split('\n');
+let currentKey = null;
+let currentValue = '';
+
+for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const colonIndex = line.indexOf(':');
-    if (colonIndex > -1) {
-        const key = line.substring(0, colonIndex).trim();
-        const value = line.substring(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
-        frontmatter[key] = value;
+    
+    // New key:value pair
+    if (colonIndex > -1 && line[0] !== ' ') {
+        // Save previous key if exists
+        if (currentKey) {
+            frontmatter[currentKey] = currentValue.trim().replace(/^["']|["']$/g, '');
+        }
+        
+        currentKey = line.substring(0, colonIndex).trim();
+        currentValue = line.substring(colonIndex + 1).trim();
+    } 
+    // Continuation of previous value (indented line)
+    else if (line.trim() && currentKey) {
+        currentValue += ' ' + line.trim();
     }
-});
+}
+
+// Save last key
+if (currentKey) {
+    frontmatter[currentKey] = currentValue.trim().replace(/^["']|["']$/g, '');
+}
 
 return {
     title: frontmatter.title || 'Untitled',
