@@ -927,7 +927,7 @@ return {
     { threshold: 5, label: "OT V" },
     { threshold: 6, label: "OT VI" },
     { threshold: 7, label: "OT VII" },
-    { threshold: 9, label: "OT VIII (Truth Revealed)" }
+    { threshold: 8, label: "OT VIII (Truth Revealed)" }
   ];
   // 3. Determine the current label based on progress
   let currentLevel = levels[0].label;
@@ -948,6 +948,31 @@ return {
     levelElement.style.textShadow = "0 0 5px #00f2ff";
   }
 });
+        if (progress >= 8) {
+    document.body.style.transition = "background-color 2s ease";
+    document.body.style.backgroundColor = "#001f3f"; 
+    levelElement.style.color = "#00f2ff";
+    levelElement.style.textShadow = "0 0 5px #00f2ff";
+    
+    // Screen shake
+    let shakes = 0;
+    const shakeInterval = setInterval(() => {
+        document.body.style.transform = `translate(${Math.random() * 10 - 5}px, ${Math.random() * 10 - 5}px)`;
+        shakes++;
+        if (shakes > 20) {
+            clearInterval(shakeInterval);
+            document.body.style.transform = 'translate(0, 0)';
+        }
+    }, 50);
+    
+    // Flash white
+    setTimeout(() => {
+        document.body.style.backgroundColor = '#FFFFFF';
+        setTimeout(() => {
+            document.body.style.backgroundColor = "#001f3f";
+        }, 100);
+    }, 1000);
+}
     </script>
 </body>
 </html>
