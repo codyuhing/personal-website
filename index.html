@@ -842,11 +842,11 @@ match[1].split('\n').forEach(line => {
 // Get body content
 const body = match[2];
 
-// Create longer excerpt
+// Use excerpt from frontmatter, or pull from body if none exists
 let excerpt = frontmatter.excerpt || '';
 
-// If excerpt is short or doesn't exist, pull from body
-if (excerpt.length < 150) {
+// Only pull from body if there's NO frontmatter excerpt at all
+if (!excerpt || excerpt.length === 0) {
     // Remove markdown formatting for cleaner preview
     const plainText = body
         .replace(/#{1,6}\s/g, '') // Remove headers
@@ -856,20 +856,14 @@ if (excerpt.length < 150) {
         .replace(/\n+/g, ' ') // Replace newlines with spaces
         .trim();
     
-    // If we have frontmatter excerpt, append body content
-    if (excerpt) {
-        excerpt = excerpt + ' ' + plainText.substring(0, 200 - excerpt.length);
-    } else {
-        // No frontmatter excerpt, use body
-        excerpt = plainText.substring(0, 300);
-    }
+    // Use first 300 characters from body
+    excerpt = plainText.substring(0, 300);
     
     // Add ellipsis if truncated
-    if (plainText.length > excerpt.length) {
+    if (plainText.length > 300) {
         excerpt = excerpt.trim() + '...';
     }
 }
-
 return {
     title: frontmatter.title || 'Untitled',
     date: frontmatter.date || new Date().toISOString(),
