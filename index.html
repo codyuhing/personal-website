@@ -839,30 +839,20 @@ match[1].split('\n').forEach(line => {
     }
 });
 
-// Get body content
-const body = match[2];
-
-// Use excerpt from frontmatter, or pull from body if none exists
+// Use the full excerpt from frontmatter
 let excerpt = frontmatter.excerpt || '';
 
-// Only pull from body if there's NO frontmatter excerpt at all
-if (!excerpt || excerpt.length === 0) {
-    // Remove markdown formatting for cleaner preview
+// Only if there's NO excerpt, pull from body
+if (!excerpt) {
+    const body = match[2];
     const plainText = body
-        .replace(/#{1,6}\s/g, '') // Remove headers
-        .replace(/\*\*/g, '') // Remove bold
-        .replace(/\*/g, '') // Remove italic
-        .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // Remove links but keep text
-        .replace(/\n+/g, ' ') // Replace newlines with spaces
+        .replace(/#{1,6}\s/g, '')
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+        .replace(/\n+/g, ' ')
         .trim();
-    
-    // Use first 150 words from body
-    excerpt = plainText.substring(0, 150);
-    
-    // Add ellipsis if truncated
-    if (plainText.length > 150) {
-        excerpt = excerpt.trim() + '...';
-    }
+    excerpt = plainText.substring(0, 300) + (plainText.length > 300 ? '...' : '');
 }
 return {
     title: frontmatter.title || 'Untitled',
